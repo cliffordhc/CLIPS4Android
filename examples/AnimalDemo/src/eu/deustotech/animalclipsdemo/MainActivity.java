@@ -10,17 +10,21 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import eu.deustotech.animalclipsdemo.logic.ExpertSystem;
 import eu.deustotech.animalclipsdemo.logic.ExpertTaskFactory;
 import eu.deustotech.animalclipsdemo.states.FinalState;
@@ -34,7 +38,7 @@ import eu.deustotech.clips.Environment;
 class CustomRadioButton extends RadioButton {
 	final StateChoice choice;
 	
-	// sigh...
+	// Define states for the color state list
 	final int[][] states = new int[][] {
 	    new int[] { android.R.attr.state_enabled}, // enabled
 	    new int[] {-android.R.attr.state_enabled}, // disabled
@@ -54,13 +58,12 @@ class CustomRadioButton extends RadioButton {
 	
 	public CustomRadioButton(Context context, StateChoice choice, String lblText) {
 		super(context);
-		this.choice = choice;    	
+		this.choice = choice;
 
-		// Otherwise the text color is set to white.
-		// No idea why this happens doing programatically, but not adding a RadioButton to the XML file... :-S
+		// Set text color with ColorStateList
     	this.setTextColor(myList);
-		this.setText( lblText );
-		this.setSelected( choice.isValid() );
+		this.setText(lblText);
+		this.setSelected(choice.isValid());
 	}
 	
 	public String getChoiceId() {
@@ -69,7 +72,7 @@ class CustomRadioButton extends RadioButton {
 }
 
 
-public class MainActivity extends Activity implements NextStateListener {
+public class MainActivity extends AppCompatActivity implements NextStateListener {
 	
 	final ExecutorService executor = Executors.newSingleThreadExecutor();
 		
@@ -77,64 +80,79 @@ public class MainActivity extends Activity implements NextStateListener {
 	ExpertSystem animalsExpertSystem;
 	ExpertTaskFactory taskFactory;
 	
+	private static final String TAG = "AnimalDemo";
 	static final String appRootDirectory = "/clipsDemo";
 	
 	private String getResourceString(String label) {
-		return getString( getResources().getIdentifier( label, "string", getBaseContext().getPackageName() ) );
+		return getString(getResources().getIdentifier(label, "string", getBaseContext().getPackageName()));
 	}
 		
 	private void createRootDirectoryIfDoesNotExist() throws FileNotFoundException {
-		final String state = android.os.Environment.getExternalStorageState();
-		if( android.os.Environment.MEDIA_MOUNTED.equals(state) ) {
-			// get the directory of the triple store
-			final File topDir = android.os.Environment.getExternalStorageDirectory();
-			final String realpath = topDir.getAbsolutePath() + MainActivity.appRootDirectory;
-			final File file = new File(realpath);
-			if( !file.exists() ) {
-				file.mkdirs(); // it creates parent folders too
+		try {
+			File file = new File(getExternalFilesDir(null), MainActivity.appRootDirectory);
+			if (!file.exists()) {
+				boolean success = file.mkdirs(); // it creates parent folders too
+				if (!success) {
+					throw new FileNotFoundException("Failed to create directory");
+				}
 			}
-		} else throw new FileNotFoundException("The external storage is not mounted.");
+		} catch (Exception e) {
+			Log.e(TAG, "Error creating directory", e);
+			throw new FileNotFoundException("The external storage is not accessible: " + e.getMessage());
+		}
 	}
 	
 	private String getRealFilePathCreatingIfDoesNotExist(String filename) throws IOException {
-		final String state = android.os.Environment.getExternalStorageState();
-		if( android.os.Environment.MEDIA_MOUNTED.equals(state) ) {
-			// get the directory of the triple store
-			final File topDir = android.os.Environment.getExternalStorageDirectory();
-			final String realpath = topDir.getAbsolutePath() + MainActivity.appRootDirectory + "/" + filename;
-			final File file = new File(realpath);
-			if( !file.exists() ) {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					throw new FileNotFoundException("The unexisting file '" + realpath + "' could not be created");
-				}
-				
-				InputStream input;
-				try {
-					input = getResources().getAssets().open(filename);
-				} catch (IOException e) {
-					throw new FileNotFoundException("That's weird, the file '" + filename + "' is not available as an asset.");
-				}
-				
-				final OutputStream output = new FileOutputStream(file);
-				
-				try {
-					final byte[] buffer = new byte[1024]; // Adjust if you want
-				    int bytesRead;
-				    while ((bytesRead = input.read(buffer)) != -1) {
-				        output.write(buffer, 0, bytesRead);
-				    }
-				} catch (IOException e) {
-					throw new IOException("Not able to write the file '" + realpath + "'.");
-				} finally {
-					output.close();
+		try {
+			File dir = new File(getExternalFilesDir(null), MainActivity.appRootDirectory);
+			if (!dir.exists()) {
+				boolean success = dir.mkdirs();
+				if (!success) {
+					throw new IOException("Failed to create directory");
 				}
 			}
-			// At this point, if it didn't exist, it does now
-			return realpath;
+			
+			File file = new File(dir, filename);
+			if (!file.exists()) {
+				try {
+					boolean created = file.createNewFile();
+					if (!created) {
+						throw new FileNotFoundException("Could not create file: " + file.getAbsolutePath());
+					}
+				} catch (IOException e) {
+					throw new FileNotFoundException("The file '" + file.getAbsolutePath() + "' could not be created: " + e.getMessage());
+				}
+				
+				InputStream input = null;
+				OutputStream output = null;
+				
+				try {
+					input = getResources().getAssets().open(filename);
+					output = new FileOutputStream(file);
+					
+					byte[] buffer = new byte[4096]; // Larger buffer for efficiency
+					int bytesRead;
+					while ((bytesRead = input.read(buffer)) != -1) {
+						output.write(buffer, 0, bytesRead);
+					}
+					output.flush();
+				} catch (IOException e) {
+					throw new IOException("Error copying file: " + e.getMessage());
+				} finally {
+					try {
+						if (input != null) input.close();
+						if (output != null) output.close();
+					} catch (IOException e) {
+						Log.e(TAG, "Error closing streams", e);
+					}
+				}
+			}
+			
+			return file.getAbsolutePath();
+		} catch (Exception e) {
+			Log.e(TAG, "Error in file operations", e);
+			throw new IOException("File operation failed: " + e.getMessage());
 		}
-		throw new FileNotFoundException("The external storage is not mounted.");
 	}
 	
 	private void setEnabledButtons(boolean restart, boolean previous, boolean next) {
@@ -193,10 +211,12 @@ public class MainActivity extends Activity implements NextStateListener {
 			this.animalsExpertSystem.start();
 			this.taskFactory = new ExpertTaskFactory( this.animalsExpertSystem );
 			
-			submitTaskToExpertSystem( this.taskFactory.createRestartTask() );
+			submitTaskToExpertSystem(this.taskFactory.createRestartTask());
 		} catch (IOException e) {
-			setEnabledButtons( false, false, false );
-			setLabelText( e.getMessage() );
+			setEnabledButtons(false, false, false);
+			setLabelText("Error: " + e.getMessage());
+			Log.e(TAG, "Error during initialization", e);
+			Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 

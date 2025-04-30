@@ -1,0 +1,28 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'eu.deustotech.simpleclipstest'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "eu.deustotech.simpleclipstest"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-project.txt'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':libs:CLIPS4Android:ClipsAndroid')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+}

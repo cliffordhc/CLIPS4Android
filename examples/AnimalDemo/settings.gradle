@@ -1,0 +1,3 @@
+rootProject.name = "AnimalDemo"
+include ':app'
+include ':libs:CLIPS4Android:ClipsAndroid'

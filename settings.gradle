@@ -1,0 +1,7 @@
+include ':ClipsAndroid'
+include ':examples:AnimalDemo'
+include ':examples:SimpleDemo'
+
+project(':ClipsAndroid').projectDir = new File(settingsDir, 'ClipsAndroid')
+project(':examples:AnimalDemo').projectDir = new File(settingsDir, 'examples/AnimalDemo')
+project(':examples:SimpleDemo').projectDir = new File(settingsDir, 'examples/SimpleDemo')
