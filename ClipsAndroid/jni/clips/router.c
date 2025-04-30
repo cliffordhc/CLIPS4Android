@@ -137,13 +137,13 @@ globle int EnvPrintRouter(
 	     // As a solution, this should be configured with the Routers.
 	     // But let's be honest: I don't know how to do it and I want it done.
 	     // So, here you have a temporary patch:
-	     aprintf(str);
+	     aprintf("%s", str);
 	   }
          else            
            {
 	     // Same here
 	     //((int (*)(char *,char *)) (*currentPtr->printer))(logicalName,str);
-	     aprintf(str);
+	     aprintf("%s", str);
 	   }
 	 return(1);
         }
