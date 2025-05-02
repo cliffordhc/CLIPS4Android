@@ -1,3 +1,4 @@
 rootProject.name = "SimpleDemo"
 include ':app'
-include ':libs:CLIPS4Android:ClipsAndroid'
+include ':ClipsAndroid'
+project(':ClipsAndroid').projectDir = file('ClipsAndroid')
