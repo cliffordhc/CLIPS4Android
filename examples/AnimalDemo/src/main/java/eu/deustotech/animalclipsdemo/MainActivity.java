@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import androidx.appcompat.widget.AppCompatRadioButton;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +33,10 @@ import eu.deustotech.animalclipsdemo.states.NextStateListener;
 import eu.deustotech.animalclipsdemo.states.StateChoice;
 import eu.deustotech.animalclipsdemo.states.UsualState;
 import eu.deustotech.clips.Environment;
+import eu.deustotech.clips.CLIPSError;
 
 
-class CustomRadioButton extends AppCompatRadioButton {
+class CustomRadioButton extends MaterialRadioButton {
 	final StateChoice choice;
 	
 	// Define states for the color state list
@@ -57,13 +58,14 @@ class CustomRadioButton extends AppCompatRadioButton {
 	
 	
 	public CustomRadioButton(Context context, StateChoice choice, String lblText) {
-		super(context);
+		super(new androidx.appcompat.view.ContextThemeWrapper(context,
+			com.google.android.material.R.style.Theme_MaterialComponents_Light), null, R.style.CustomMaterialRadioButton);
 		this.choice = choice;
 
 		// Set text color with ColorStateList
     	this.setTextColor(myList);
-		this.setText(lblText);
-		this.setSelected(choice.isValid());
+		this.setText( lblText );
+		this.setSelected( choice.isValid() );
 	}
 	
 	public String getChoiceId() {
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NextStateListener
 	eu.deustotech.clips.Environment clips;
 	ExpertSystem animalsExpertSystem;
 	ExpertTaskFactory taskFactory;
+	private String currentQuestion;
 	
 	private static final String TAG = "AnimalDemo";
 	static final String appRootDirectory = "/clipsDemo";
@@ -176,30 +179,69 @@ public class MainActivity extends AppCompatActivity implements NextStateListener
 		rg.removeAllViews();
 		rg.clearCheck();
 		if( choices != null ) {
-			for(StateChoice choice: choices) {
+			// A question without choices is valid and is used to notify/inform the user
+			boolean hasValid = choices.isEmpty();
+            for(StateChoice choice: choices) {
 				final String lblText = getResourceString(choice.getId());
 				final CustomRadioButton rb = new CustomRadioButton( getBaseContext(), choice, lblText );
+				rb.setId(View.generateViewId());
 				rg.addView( rb );
+				if (choice.isValid()) {
+					hasValid = true;
+				}
 			}
+			if(rg.getChildCount() > 0) {
+				// Find first valid choice to check
+				for(int i = 0; i < rg.getChildCount(); i++) {
+					final CustomRadioButton rb = (CustomRadioButton) rg.getChildAt(i);
+					rb.setOnClickListener(v -> {
+						rg.check(rb.getId());
+						getSelectedChoice();
+					});
+					if (rb.choice.isValid()) {
+						rg.check(rb.getId());
+					}
+				}
+			}
+			// Enable Next button only if there are valid choices
+			final Button btnNext = (Button) findViewById(R.id.btnNext);
+			btnNext.setEnabled(hasValid);
+			
+			rg.invalidate();
 		}
-		
-		//rg.refreshDrawableState();
-		rg.invalidate();
-		//ViewGroup vg = (ViewGroup) findViewById (R.id.mainLayout);
-		//vg.invalidate();
 	}
 	
 	private String getSelectedChoice() {
 		final RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 		final int checkedRBId = rg.getCheckedRadioButtonId();
 		if( checkedRBId==-1 ) return null;
-		return ((CustomRadioButton) findViewById(checkedRBId)).getChoiceId();
+		final String choice = ((CustomRadioButton) findViewById(checkedRBId)).getChoiceId();
+		advanceQuestion(choice);
+		return choice;
+	}
+	
+	private void updateUI() {
+		final String question = currentQuestion;
+		this.runOnUiThread(() -> {
+			setLabelText(getResourceString(question));
+			setEnabledButtons(true, true, true);
+		});
+	}
+
+	private void advanceQuestion(String choice) {
+		final Button btnNext = (Button) findViewById(R.id.btnNext);
+		if(choice != null) {
+			submitTaskToExpertSystem(this.taskFactory.createNextTask(choice));
+			btnNext.setEnabled(false); // Disable until new selection
+		}
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(com.google.android.material.R.style.Theme_MaterialComponents_Light_DarkActionBar);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Log.d(TAG, "Current theme: " + getTheme());
 		
 		try {
 			createRootDirectoryIfDoesNotExist();
@@ -242,7 +284,13 @@ public class MainActivity extends AppCompatActivity implements NextStateListener
 	
 	public void onClickNext(View view) {
 		final String chosenStateId = getSelectedChoice();
-		// TODO Check that if there are choices, one is selected!
+		final RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
+
+		if (rg.getChildCount() != 0 && chosenStateId == null) {
+			Toast.makeText(this, getResourceString("no_option_selected"), Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		submitTaskToExpertSystem( this.taskFactory.createNextTask(chosenStateId) );
 	}
 	
@@ -263,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements NextStateListener
 		this.runOnUiThread(
 				new Runnable() {
 					public void run() {
-						setEnabledButtons(false, false, true);
+						setEnabledButtons(false, false, state.getChoices() == null || state.getChoices().isEmpty());
 						setLabelText( getResourceString( state.getQuestion() ) );
 						setChoices( state.getChoices() );
 					}
@@ -277,8 +325,8 @@ public class MainActivity extends AppCompatActivity implements NextStateListener
 				new Runnable() {
 					public void run() {
 						setEnabledButtons(true, true, true);
-						setLabelText( getResourceString( state.getQuestion() ) );
-						setChoices( state.getChoices() );
+						setLabelText(getResourceString(state.getQuestion()));
+						setChoices(state.getChoices());
 					}
 				}
 		);

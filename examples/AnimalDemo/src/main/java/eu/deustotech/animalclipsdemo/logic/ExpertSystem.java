@@ -102,12 +102,11 @@ public class ExpertSystem {
 		final MultifieldValue displayAnswers = (MultifieldValue) currentState.getFactSlot("display-answers");
 		final String selected = currentState.getFactSlot("response").toString();
 
-		for (int i = 0, j = 0; (i < validAnswers.size()) && (j < displayAnswers.size()); i++, j++) {
-			final PrimitiveValue validAnswer = validAnswers.get(i);
+		for (int i = 0, j = 0; j < displayAnswers.size(); i++, j++) {
 			final PrimitiveValue displayAnswer = displayAnswers.get(j);
 			
 			// I don't really get this "validity" thing... (maybe when running)
-			final boolean valid = validAnswer.toString().equals(selected);
+			final boolean valid = validAnswers.multifieldValue().equals(selected);
 			choices.add( new StateChoice( displayAnswer.getValue().toString(), valid) );
 		}
 		
@@ -135,7 +134,8 @@ public class ExpertSystem {
         } else {
         	for( NextStateListener listener: this.listeners) {
 				listener.nextState( new UsualState( getText(currentState), getChoices(currentState) ) );
-        	}
-        }
-	}
+				    	}
+				    }
+				}
+				
 }

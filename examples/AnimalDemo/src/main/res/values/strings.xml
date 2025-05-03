@@ -5,4 +5,6 @@
     <string name="restart">Restart</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+<string name="no_options_available">No options available</string>
+    <string name="no_option_selected">Please select an option first</string>
 </resources>

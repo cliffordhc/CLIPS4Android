@@ -15,5 +15,9 @@
         <!-- Radio button style -->
         <item name="radioButtonStyle">@style/Widget.MaterialComponents.CompoundButton.RadioButton</item>
     </style>
+    
+    <style name="CustomMaterialRadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <!-- Custom attributes if needed -->
+    </style>
 
 </resources>
