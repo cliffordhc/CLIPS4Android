@@ -4,68 +4,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
-    <TextView
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/app_name"
+        app:menu="@menu/main"
+        app:titleTextColor="?attr/colorOnPrimary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/error_msg"
-        android:textSize="16sp"
+        style="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?attr/colorOnSurface"
         android:layout_marginBottom="16dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:cardElevation="2dp"
-        app:cardCornerRadius="8dp">
-        
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="?attr/colorSurface">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp">
-            <TextView
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblPrint"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/msgPrintDesc" />
-            <TextView
+                android:text="@string/msgPrintDesc"
+                android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblPrintResult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/msgDefaultResult"
-                android:textStyle="bold" />
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorPrimary" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
-    
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:cardElevation="2dp"
-        app:cardCornerRadius="8dp">
-        
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="?attr/colorSurface">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp">
-            <TextView
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblEval"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/msgEvalDesc" />
-            <TextView
+                android:text="@string/msgEvalDesc"
+                android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblEvalResult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/msgDefaultResult"
-                android:textStyle="bold" />
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorPrimary" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
     
@@ -73,21 +96,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:cardElevation="2dp"
-        app:cardCornerRadius="8dp">
+        app:cardElevation="4dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="?attr/colorSurface">
         
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="8dp">
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblThrow"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/msgThrowDesc" />
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/lblThrowResult"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,4 +120,5 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    </LinearLayout>
 </LinearLayout>

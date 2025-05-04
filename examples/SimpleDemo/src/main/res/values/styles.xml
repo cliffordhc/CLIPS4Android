@@ -1,17 +1,31 @@
 <resources>
 
-    <!-- Base application theme using Material Design -->
+    <!-- Material 3 theme matching AnimalDemo -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@android:color/holo_blue_dark</item>
-        <item name="colorPrimaryVariant">@android:color/holo_blue_light</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@android:color/holo_green_dark</item>
-        <item name="colorSecondaryVariant">@android:color/holo_green_light</item>
-        <item name="colorOnSecondary">@android:color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Color scheme -->
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+
+        <!-- Surface colors -->
+        <item name="android:colorBackground">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+
+        <!-- Component styles -->
+        <item name="radioButtonStyle">@style/Widget.Material3.CompoundButton.RadioButton</item>
+        
+        <!-- Status bar configuration -->
+        <item name="android:statusBarColor">?attr/colorPrimaryContainer</item>
+    </style>
+
+    <style name="CustomMaterialRadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
+        <item name="android:buttonTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
 </resources>
