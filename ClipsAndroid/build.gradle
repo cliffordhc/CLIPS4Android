@@ -9,12 +9,15 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 34
+        externalNativeBuild {
+            ndkBuild {
+                cppFlags ''
+            }
+        }
     }
-
-    sourceSets {
-        main {
-            java.srcDirs = ['src']
-            jniLibs.srcDirs = ['libs']
+    externalNativeBuild {
+        ndkBuild {
+            path file('jni/Android.mk')
         }
     }
 }
