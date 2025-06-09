@@ -1,4 +1,4 @@
-package eu.deustotech.clips.demo.semanticreasoning;
+package eu.deustotech.semanticreasoning;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,9 +28,9 @@ import android.view.Menu;
 import android.widget.Toast;
 import es.deusto.deustotech.rio.clips.CLPParserFactory;
 import es.deusto.deustotech.rio.clips.CLPWriterFactory;
-import eu.deustotech.clips.demo.semanticreasoning.reasoner.SemanticReasoner;
-import eu.deustotech.clips.demo.semanticreasoning.util.SemanticLoader;
-import eu.deustotech.clips.demo.semanticreasoning.util.SemanticWriter;
+import eu.deustotech.semanticreasoning.reasoner.SemanticReasoner;
+import eu.deustotech.semanticreasoning.util.SemanticLoader;
+import eu.deustotech.semanticreasoning.util.SemanticWriter;
 
 public class MainActivity extends Activity {
 	

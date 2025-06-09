@@ -1,4 +1,4 @@
-package eu.deustotech.clips.demo.semanticreasoning.reasoner;
+package eu.deustotech.semanticreasoning.reasoner;
 
 import eu.deustotech.clips.CLIPSError;
 import eu.deustotech.clips.MultifieldValue;

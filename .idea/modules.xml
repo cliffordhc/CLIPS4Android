@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClipsAndroid/CLIPS4Android.ClipsAndroid.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ClipsAndroid/CLIPS4Android.ClipsAndroid.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/examples/SemanticReasoningClipsDemo/CLIPS4Android.examples.SemanticReasoningClipsDemo.main.iml" filepath="$PROJECT_DIR$/.idea/modules/examples/SemanticReasoningClipsDemo/CLIPS4Android.examples.SemanticReasoningClipsDemo.main.iml" />
     </modules>
   </component>
 </project>

@@ -1,4 +1,4 @@
-package eu.deustotech.clips.demo.semanticreasoning.reasoner;
+package eu.deustotech.semanticreasoning.reasoner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
@@ -14,10 +14,14 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "CLIPS4Android"
+
 include ':ClipsAndroid'
 include ':examples:AnimalDemo'
 include ':examples:SimpleDemo'
+include ':examples:SemanticReasoningClipsDemo'
 
 project(':ClipsAndroid').projectDir = new File(settingsDir, 'ClipsAndroid')
 project(':examples:AnimalDemo').projectDir = new File(settingsDir, 'examples/AnimalDemo')
+project(':examples:SemanticReasoningClipsDemo').projectDir = new File(settingsDir, 'examples/SemanticReasoningClipsDemo')
 project(':examples:SimpleDemo').projectDir = new File(settingsDir, 'examples/SimpleDemo')

@@ -1,4 +1,4 @@
-package eu.deustotech.clips.demo.semanticreasoning.util;
+package eu.deustotech.semanticreasoning.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,7 +18,7 @@ import org.openrdf.rio.RDFWriterRegistry;
 import android.util.Log;
 
 import es.deusto.deustotech.rio.clips.CLPFormat;
-import eu.deustotech.clips.demo.semanticreasoning.MainActivity;
+import eu.deustotech.semanticreasoning.MainActivity;
 
 public class SemanticWriter {
 	
